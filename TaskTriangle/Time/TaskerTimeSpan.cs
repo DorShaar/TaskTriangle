@@ -4,6 +4,7 @@ namespace Triangle.Time
 {
     public class TaskerTimeSpan
     {
+        public TimeMode TimeMode { get; }
         public TimeSpan TimeSpan { get; }
 
         public static TaskerTimeSpan CreateQuick()
@@ -24,6 +25,8 @@ namespace Triangle.Time
             if (days == 0 && !halfDay)
                 throw new ArgumentException($"One of the arguments {nameof(days)}, {nameof(halfDay)} must be positive");
 
+            TimeMode = timeMode;
+
             int hours = 0;
             if (!halfDay)
             {
@@ -31,9 +34,9 @@ namespace Triangle.Time
                 return;
             }
 
-            hours = 12;
+            hours = TimeConsts.HalfDay;
             if (timeMode == TimeMode.Work)
-                hours = 3;
+                hours = TimeConsts.HalfWorkDay;
 
             TimeSpan = new TimeSpan(days, hours, 0, 0);
         }

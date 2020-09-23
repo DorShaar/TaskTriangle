@@ -8,17 +8,12 @@ namespace Triangle.Time
     public class TaskerDateTime
     {
         public DateTime DateTime { get; }
+        public DayPeriod DayPeriod { get; }
 
         public TaskerDateTime(DateTime date, DayPeriod dayPeriod)
         {
-            int hour = dayPeriod switch
-            {
-                DayPeriod.Morning => 9,
-                DayPeriod.Noon => 14,
-                _ => throw new ArgumentException($"Invalid argument {nameof(dayPeriod)}: {dayPeriod}"),
-            };
-
-            DateTime = new DateTime(date.Year, date.Month, date.Day, hour, 0, 0);
+            DateTime = new DateTime(date.Year, date.Month, date.Day);
+            DayPeriod = dayPeriod;
         }
     }
 }

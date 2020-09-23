@@ -7,21 +7,15 @@ namespace Triangle.Tests
     public class TaskerDateTimeTests
     {
         [Theory]
-        [InlineData("01/02/1991", DayPeriod.Morning, 2, 9)]
-        [InlineData("03/05/1992", DayPeriod.Noon, 5, 14)]
-        public void Ctor_ValidArguments_AsExpected(
-            string dateString, DayPeriod dayPeriod, int expectedMonth, int expectedHour)
+        [InlineData("01/02/1991", DayPeriod.Morning, 2)]
+        [InlineData("03/05/1992", DayPeriod.Noon, 5)]
+        public void Ctor_ValidArguments_AsExpected(string dateString, DayPeriod dayPeriod, int expectedMonth)
         {
-            TaskerDateTime taskerDateTime = new TaskerDateTime(DateTime.Parse(dateString), dayPeriod);
+            TaskerDateTime taskerDateTime = new TaskerDateTime(dateString.ToDateTime(), dayPeriod);
             Assert.Equal(expectedMonth, taskerDateTime.DateTime.Month);
-            Assert.Equal(expectedHour, taskerDateTime.DateTime.Hour);
+            Assert.Equal(dayPeriod, taskerDateTime.DayPeriod);
+            Assert.Equal(0, taskerDateTime.DateTime.Hour);
             Assert.Equal(0, taskerDateTime.DateTime.Minute);
-        }
-
-        [Fact]
-        public void Ctor_InvalidArguments_ThrowsArgumentException()
-        {
-            Assert.Throws<ArgumentException>(() => new TaskerDateTime(DateTime.Now, (DayPeriod)50));
         }
     }
 }
