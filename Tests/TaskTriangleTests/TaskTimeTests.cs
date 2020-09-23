@@ -36,7 +36,8 @@ namespace TaskTriangleTests
             TaskerTimeSpan remainingTime = taskTime.GetRemainingTime();
 
             Assert.Equal(TimeMode.Work, remainingTime.TimeMode);
-            Assert.Equal(timeSpan.TimeSpan, remainingTime.TimeSpan);
+            Assert.Equal(7, remainingTime.Days);
+            Assert.Equal(3, remainingTime.Hours);
         }
     }
 }

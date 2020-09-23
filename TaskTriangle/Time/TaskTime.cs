@@ -15,9 +15,9 @@ namespace Triangle.Time
 
         public TaskerDateTime GetExpectedDueDate()
         {
-            DateTime dateTime = StartTime.DateTime.AddDays(ExpectedDuration.TimeSpan.Days);
+            DateTime dateTime = StartTime.DateTime.AddDays(ExpectedDuration.Days);
 
-            bool isHalfDayLeft = IsHalfDayLeft(ExpectedDuration.TimeSpan);
+            bool isHalfDayLeft = IsHalfDayLeft(ExpectedDuration.Hours);
 
             if (StartTime.DayPeriod == DayPeriod.Noon && isHalfDayLeft)
                 dateTime = dateTime.AddDays(1);
@@ -33,17 +33,17 @@ namespace Triangle.Time
 
             TimeSpan remainingTime = expectedDueDate - DateTime.Now;
 
-            bool halfDay = IsHalfDayLeft(remainingTime);
+            bool halfDay = IsHalfDayLeft(remainingTime.Hours);
 
             return new TaskerTimeSpan(remainingTime.Days, halfDay, ExpectedDuration.TimeMode);
         }
 
-        private bool IsHalfDayLeft(TimeSpan remainingTime)
+        private bool IsHalfDayLeft(int hours)
         {
             if (ExpectedDuration.TimeMode == TimeMode.Regular)
-                return remainingTime.Hours >= (double)(TimeConsts.HalfDay / 2);
+                return hours >= (double)(TimeConsts.HalfDay / 2);
 
-            return remainingTime.Hours >= (double)(TimeConsts.HalfWorkDay / 2);
+            return hours >= (double)(TimeConsts.HalfWorkDay / 2);
         }
     }
 }

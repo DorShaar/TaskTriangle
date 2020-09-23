@@ -4,8 +4,12 @@ namespace Triangle.Time
 {
     public class TaskerTimeSpan
     {
+        private readonly TimeSpan mTimeSpan;
+
         public TimeMode TimeMode { get; }
-        public TimeSpan TimeSpan { get; }
+        public int Days => mTimeSpan.Days;
+        public int Hours => mTimeSpan.Hours;
+        public int TotalHours { get => CalculateTotalHours(); }
 
         public static TaskerTimeSpan CreateQuick()
         {
@@ -14,7 +18,7 @@ namespace Triangle.Time
 
         private TaskerTimeSpan()
         {
-            TimeSpan = new TimeSpan(1, 0, 0);
+            mTimeSpan = new TimeSpan(1, 0, 0);
         }
 
         public TaskerTimeSpan(int days, bool halfDay, TimeMode timeMode)
@@ -30,7 +34,7 @@ namespace Triangle.Time
             int hours = 0;
             if (!halfDay)
             {
-                TimeSpan = new TimeSpan(days, hours, 0, 0);
+                mTimeSpan = new TimeSpan(days, hours, 0, 0);
                 return;
             }
 
@@ -38,11 +42,19 @@ namespace Triangle.Time
             if (timeMode == TimeMode.Work)
                 hours = TimeConsts.HalfWorkDay;
 
-            TimeSpan = new TimeSpan(days, hours, 0, 0);
+            mTimeSpan = new TimeSpan(days, hours, 0, 0);
         }
 
         public TaskerTimeSpan(int days, bool halfDay) : this(days, halfDay, TimeMode.Regular)
         {
+        }
+
+        private int CalculateTotalHours()
+        {
+            if (TimeMode == TimeMode.Regular)
+                return 24 * Days + Hours;
+            else
+                return TimeConsts.HoursPerWorkDay * Days + Hours;
         }
     }
 }

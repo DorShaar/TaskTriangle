@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Triangle.Content;
 using Triangle.Resources;
 using Triangle.Time;
@@ -19,7 +19,7 @@ namespace Triangle
             Resources = resources;
             Content = content;
 
-            Configuration.PercentageProgressToNotify.Add(80);
+            Configuration.PercentagesProgressToNotify.Add(80);
         }
 
         //public bool GetStatus()
@@ -27,10 +27,14 @@ namespace Triangle
         //    // TODO
         //}
 
-        //public bool ShouldNotify()
-        //{
-        //    DateTime dueDate = Time.GetExpectedDueDate();
+        public bool ShouldNotify()
+        {
+            int totalHours = Time.ExpectedDuration.TotalHours;
+            TaskerTimeSpan remainingTime = Time.GetRemainingTime();
+            int currentProgressPercentage = (int)((double)(remainingTime.TotalHours / totalHours) * 100);
 
-        //}
+            return Configuration.PercentagesProgressToNotify.Any(percentage => 
+                percentage <= currentProgressPercentage);
+        }
     }
 }

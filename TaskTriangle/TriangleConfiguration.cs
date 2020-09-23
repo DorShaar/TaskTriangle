@@ -4,6 +4,6 @@ namespace Triangle
 {
     public class TriangleConfiguration
     {
-        public List<int> PercentageProgressToNotify = new List<int>();
+        public List<int> PercentagesProgressToNotify { get; } = new List<int>();
     }
 }
