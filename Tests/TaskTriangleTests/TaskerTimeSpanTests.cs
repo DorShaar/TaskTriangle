@@ -19,7 +19,7 @@ namespace Triangle.Tests
 
             Assert.Equal(days, taskerTimeSpan.Days);
             Assert.Equal(expectedHours, taskerTimeSpan.Hours);
-            Assert.Equal(expectedTotalHours, taskerTimeSpan.TotalHours);
+            Assert.Equal(expectedTotalHours, taskerTimeSpan.CalculateTotalHours(timeMode));
         }
 
         [Fact]
@@ -28,7 +28,6 @@ namespace Triangle.Tests
             TaskerTimeSpan taskerTimeSpan = new TaskerTimeSpan(3, true);
             Assert.Equal(3, taskerTimeSpan.Days);
             Assert.Equal(12, taskerTimeSpan.Hours);
-            Assert.Equal(84, taskerTimeSpan.TotalHours);
         }
 
         [Theory]
@@ -45,7 +44,6 @@ namespace Triangle.Tests
             TaskerTimeSpan taskerTimeSpan = TaskerTimeSpan.CreateQuick();
             Assert.Equal(0, taskerTimeSpan.Days);
             Assert.Equal(1, taskerTimeSpan.Hours);
-            Assert.Equal(1, taskerTimeSpan.TotalHours);
         }
     }
 }

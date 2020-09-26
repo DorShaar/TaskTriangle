@@ -6,19 +6,22 @@ namespace Triangle.Time
     {
         private readonly TimeSpan mTimeSpan;
 
-        public TimeMode TimeMode { get; }
         public int Days => mTimeSpan.Days;
         public int Hours => mTimeSpan.Hours;
-        public int TotalHours { get => CalculateTotalHours(); }
 
         public static TaskerTimeSpan CreateQuick()
         {
-            return new TaskerTimeSpan();
+            return new TaskerTimeSpan(1);
         }
 
-        private TaskerTimeSpan()
+        public static TaskerTimeSpan CreateZero()
         {
-            mTimeSpan = new TimeSpan(1, 0, 0);
+            return new TaskerTimeSpan(0);
+        }
+
+        private TaskerTimeSpan(int hours)
+        {
+            mTimeSpan = new TimeSpan(hours, 0, 0);
         }
 
         public TaskerTimeSpan(int days, bool halfDay, TimeMode timeMode)
@@ -27,9 +30,10 @@ namespace Triangle.Time
                 throw new ArgumentException($"Non of the arguments {nameof(days)}, {nameof(halfDay)} cannot be negative");
 
             if (days == 0 && !halfDay)
-                throw new ArgumentException($"One of the arguments {nameof(days)}, {nameof(halfDay)} must be positive");
-
-            TimeMode = timeMode;
+            {
+                throw new ArgumentException($"One of the arguments {nameof(days)}, {nameof(halfDay)} must be positive. " +
+                    $"If you would like to create zero time span, use {nameof(CreateZero)}");
+            }
 
             int hours = 0;
             if (!halfDay)
@@ -49,9 +53,9 @@ namespace Triangle.Time
         {
         }
 
-        private int CalculateTotalHours()
+        public int CalculateTotalHours(TimeMode timeMode)
         {
-            if (TimeMode == TimeMode.Regular)
+            if (timeMode == TimeMode.Regular)
                 return 24 * Days + Hours;
             else
                 return TimeConsts.HoursPerWorkDay * Days + Hours;

@@ -4,13 +4,15 @@ namespace Triangle.Time
 {
     public class TaskTime
     {
+        public TimeMode TimeMode { get; }
         public TaskerDateTime StartTime { get; }
         public TaskerTimeSpan ExpectedDuration { get; }
 
-        public TaskTime(TaskerDateTime startTime, TaskerTimeSpan expectedDuration)
+        public TaskTime(TaskerDateTime startTime, TaskerTimeSpan expectedDuration, TimeMode timeMode)
         {
             StartTime = startTime;
             ExpectedDuration = expectedDuration;
+            TimeMode = timeMode;
         }
 
         public TaskerDateTime GetExpectedDueDate()
@@ -33,14 +35,17 @@ namespace Triangle.Time
 
             TimeSpan remainingTime = expectedDueDate - DateTime.Now;
 
+            if (remainingTime.TotalMilliseconds < 0)
+                return TaskerTimeSpan.CreateZero();
+
             bool halfDay = IsHalfDayLeft(remainingTime.Hours);
 
-            return new TaskerTimeSpan(remainingTime.Days, halfDay, ExpectedDuration.TimeMode);
+            return new TaskerTimeSpan(remainingTime.Days, halfDay, TimeMode);
         }
 
         private bool IsHalfDayLeft(int hours)
         {
-            if (ExpectedDuration.TimeMode == TimeMode.Regular)
+            if (TimeMode == TimeMode.Regular)
                 return hours >= (double)(TimeConsts.HalfDay / 2);
 
             return hours >= (double)(TimeConsts.HalfWorkDay / 2);

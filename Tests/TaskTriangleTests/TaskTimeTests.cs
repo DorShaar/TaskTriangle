@@ -17,7 +17,7 @@ namespace TaskTriangleTests
         {
             TaskerDateTime dateTime = new TaskerDateTime(dateString.ToDateTime(), dayPeriod);
             TaskerTimeSpan timeSpan = new TaskerTimeSpan(days, halfDay, timeMode);
-            TaskTime taskTime = new TaskTime(dateTime, timeSpan);
+            TaskTime taskTime = new TaskTime(dateTime, timeSpan, timeMode);
 
             TaskerDateTime dueDate = taskTime.GetExpectedDueDate();
 
@@ -29,15 +29,33 @@ namespace TaskTriangleTests
         [Fact]
         public void GetRemainingTime_AsExpected()
         {
+            TimeMode workTimeMode = TimeMode.Work;
+
             TaskerDateTime dateTime = new TaskerDateTime(DateTime.Now, DayPeriod.Noon);
-            TaskerTimeSpan timeSpan = new TaskerTimeSpan(7, halfDay: true, TimeMode.Work);
-            TaskTime taskTime = new TaskTime(dateTime, timeSpan);
+            TaskerTimeSpan timeSpan = new TaskerTimeSpan(7, halfDay: true, workTimeMode);
+            TaskTime taskTime = new TaskTime(dateTime, timeSpan, workTimeMode);
 
             TaskerTimeSpan remainingTime = taskTime.GetRemainingTime();
 
-            Assert.Equal(TimeMode.Work, remainingTime.TimeMode);
+            Assert.Equal(TimeMode.Work, taskTime.TimeMode);
             Assert.Equal(7, remainingTime.Days);
             Assert.Equal(3, remainingTime.Hours);
+        }
+
+        [Fact]
+        public void GetRemainingTime_NoTimeRemaining_ReturnsZeroTime()
+        {
+            TimeMode workTimeMode = TimeMode.Work;
+
+            TaskerDateTime dateTime = new TaskerDateTime(DateTime.Now.AddDays(-2), DayPeriod.Noon);
+            TaskerTimeSpan timeSpan = new TaskerTimeSpan(1, halfDay: false, workTimeMode);
+            TaskTime taskTime = new TaskTime(dateTime, timeSpan, workTimeMode);
+
+            TaskerTimeSpan remainingTime = taskTime.GetRemainingTime();
+
+            Assert.Equal(TimeMode.Work, taskTime.TimeMode);
+            Assert.Equal(0, remainingTime.Days);
+            Assert.Equal(0, remainingTime.Hours);
         }
     }
 }

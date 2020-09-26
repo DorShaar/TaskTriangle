@@ -22,6 +22,8 @@ namespace TaskTriangleTests
                 .AddResource(resource)
                 .SetTime("23/09/2020", DayPeriod.Morning, 1, false)
                 .AddContent(content2)
+                .AddPercentageProgressToNotify(30)
+                .AddPercentageProgressToNotify(85)
                 .Build();
 
             IReadOnlyDictionary<string, bool> contents = taskTriangle.Content.GetContents();
@@ -34,6 +36,10 @@ namespace TaskTriangleTests
             Assert.Equal(23, taskTriangle.Time.StartTime.DateTime.Day);
             Assert.Equal(09, taskTriangle.Time.StartTime.DateTime.Month);
             Assert.Equal(2020, taskTriangle.Time.StartTime.DateTime.Year);
+
+
+            Assert.Equal(30, taskTriangle.Configuration.PercentagesProgressToNotify[0]);
+            Assert.Equal(85, taskTriangle.Configuration.PercentagesProgressToNotify[1]);
         }
     }
 }

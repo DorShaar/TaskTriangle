@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Triangle.Content;
 using Triangle.Resources;
 using Triangle.Time;
@@ -11,6 +10,7 @@ namespace Triangle
         private TaskTime mTime;
         private readonly TaskContent mContent = new TaskContent();
         private readonly TaskResources mResources = new TaskResources();
+        private readonly TriangleConfiguration mConfiguration = new TriangleConfiguration();
 
         public TaskTriangleBuilder SetTime(string startDate, DayPeriod dayPeriod, int workDays, bool halfWorkDay)
         {
@@ -23,7 +23,7 @@ namespace Triangle
             TaskerDateTime dateTime = new TaskerDateTime(startDate.ToDateTime(), dayPeriod);
             TaskerTimeSpan timeSpan = new TaskerTimeSpan(workDays, halfWorkDay, timeMode);
 
-            TaskTime taskTime = new TaskTime(dateTime, timeSpan);
+            TaskTime taskTime = new TaskTime(dateTime, timeSpan, timeMode);
             mTime = taskTime;
 
             return this;
@@ -31,10 +31,12 @@ namespace Triangle
 
         private TaskTime CreateDefaultTime()
         {
-            TaskerDateTime dateTime = new TaskerDateTime(DateTime.Now, DayPeriod.Morning);
-            TaskerTimeSpan timeSpan = new TaskerTimeSpan(1, false, TimeMode.Regular);
+            TimeMode regularTimeMode = TimeMode.Regular;
 
-            return new TaskTime(dateTime, timeSpan);
+            TaskerDateTime dateTime = new TaskerDateTime(DateTime.Now, DayPeriod.Morning);
+            TaskerTimeSpan timeSpan = new TaskerTimeSpan(1, false, regularTimeMode);
+
+            return new TaskTime(dateTime, timeSpan, regularTimeMode);
         }
 
         public TaskTriangleBuilder AddContent(string content)
@@ -49,12 +51,18 @@ namespace Triangle
             return this;
         }
 
+        public TaskTriangleBuilder AddPercentageProgressToNotify(int percentage)
+        {
+            mConfiguration.PercentagesProgressToNotify.Add(percentage);
+            return this;
+        }
+
         public TaskTriangle Build()
         {
             if (mTime == null)
                 mTime = CreateDefaultTime();
 
-            return new TaskTriangle(mTime, mResources, mContent);
+            return new TaskTriangle(mTime, mContent, mResources, mConfiguration);
         }
     }
 }
