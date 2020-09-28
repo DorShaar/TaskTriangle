@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Triangle.Time
 {
@@ -10,9 +11,9 @@ namespace Triangle.Time
         public DateTime DateTime { get; }
         public DayPeriod DayPeriod { get; }
 
-        public TaskerDateTime(DateTime date, DayPeriod dayPeriod)
+        public TaskerDateTime(DateTime dateTime, DayPeriod dayPeriod)
         {
-            DateTime = new DateTime(date.Year, date.Month, date.Day);
+            DateTime = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
             DayPeriod = dayPeriod;
         }
     }

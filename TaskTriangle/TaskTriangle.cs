@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Linq;
 using System.Text;
 using Triangle.Content;
@@ -16,6 +18,7 @@ namespace Triangle
         public TaskContent Content { get; }
         public TaskResources Resources { get; }
 
+        [JsonConstructor]
         internal TaskTriangle(TaskTime time, TaskContent content, TaskResources resources,
             TriangleConfiguration configuration)
         {

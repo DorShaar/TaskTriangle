@@ -43,7 +43,7 @@ Me,
             Assert.True(taskTriangle.Content.MarkContentDone("Clean teeth with dental floss"));
 
             string actualStatus = taskTriangle.GetStatus();
-            string statusWithoutReportTime = actualStatus.Remove(0, 38);
+            string statusWithoutReportTime = actualStatus.Remove(0, 37);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);
         }

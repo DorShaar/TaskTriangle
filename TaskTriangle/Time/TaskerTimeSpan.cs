@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Triangle.Time
 {
@@ -24,6 +25,7 @@ namespace Triangle.Time
             mTimeSpan = new TimeSpan(hours, 0, 0);
         }
 
+        [JsonConstructor]
         public TaskerTimeSpan(int days, bool halfDay, TimeMode timeMode)
         {
             if (days < 0)
