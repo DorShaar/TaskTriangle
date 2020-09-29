@@ -1,4 +1,5 @@
 ﻿using System;
+using Triangle.Configuration;
 using Triangle.Content;
 using Triangle.Resources;
 using Triangle.Time;
@@ -53,7 +54,7 @@ namespace Triangle
 
         public TaskTriangleBuilder AddPercentageProgressToNotify(int percentage)
         {
-            mConfiguration.PercentagesProgressToNotify.Add(percentage);
+            mConfiguration.PercentagesProgressToNotify.Set(percentage);
             return this;
         }
 

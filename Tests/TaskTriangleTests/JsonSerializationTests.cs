@@ -54,9 +54,15 @@ namespace TaskTriangleTests
             Assert.True(taskTriangle.Content.GetContents().TryGetValue("content 1", out bool _));
             Assert.True(taskTriangle.Content.GetContents().TryGetValue("content 2", out bool _));
             Assert.False(taskTriangle.Content.GetContents().TryGetValue("content 3", out bool _));
+
             Assert.Equal("resource 1", taskTriangle.Resources.GetResources().First());
-            Assert.Equal(30, taskTriangle.Configuration.PercentagesProgressToNotify[0]);
-            Assert.Equal(95, taskTriangle.Configuration.PercentagesProgressToNotify[1]);
+
+            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(30));
+            taskTriangle.Configuration.PercentagesProgressToNotify.Reset(30);
+
+            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(95));
+            Assert.False(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(89));
+
             Assert.Equal(2020, taskTriangle.Time.StartTime.DateTime.Year);
             Assert.Equal(9, taskTriangle.Time.StartTime.DateTime.Month);
             Assert.Equal(29, taskTriangle.Time.StartTime.DateTime.Day);

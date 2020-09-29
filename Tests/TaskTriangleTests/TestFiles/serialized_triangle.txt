@@ -1,9 +1,11 @@
 {
   "Configuration": {
-    "PercentagesProgressToNotify": [
-      30,
-      95
-    ]
+    "PercentagesProgressToNotify": {
+      "mPercentagesSet": [
+        30,
+        90
+      ]
+    }
   },
   "Time": {
     "TimeMode": 0,

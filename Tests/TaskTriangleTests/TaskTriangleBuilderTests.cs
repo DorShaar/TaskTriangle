@@ -38,8 +38,10 @@ namespace TaskTriangleTests
             Assert.Equal(2020, taskTriangle.Time.StartTime.DateTime.Year);
 
 
-            Assert.Equal(30, taskTriangle.Configuration.PercentagesProgressToNotify[0]);
-            Assert.Equal(85, taskTriangle.Configuration.PercentagesProgressToNotify[1]);
+            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(30));
+            taskTriangle.Configuration.PercentagesProgressToNotify.Reset(30);
+
+            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(85));
         }
     }
 }

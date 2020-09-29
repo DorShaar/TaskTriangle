@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Linq;
 using System.Text;
+using Triangle.Configuration;
 using Triangle.Content;
 using Triangle.Resources;
 using Triangle.Time;
@@ -76,8 +75,7 @@ namespace Triangle
             float fraction = (float)remainingTime.CalculateTotalHours(Time.TimeMode) / totalHours;
             int currentTimeProgressPercentage = 100 - (int)(fraction * 100);
 
-            return Configuration.PercentagesProgressToNotify.Any(percentage =>
-                percentage <= currentTimeProgressPercentage);
+            return Configuration.PercentagesProgressToNotify.HasLowerPercentage(currentTimeProgressPercentage);
         }
     }
 }

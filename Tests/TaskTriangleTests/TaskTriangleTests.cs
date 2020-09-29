@@ -17,7 +17,7 @@ namespace TaskTriangleTests
             TaskTriangle taskTriangle = CreateTaskTriangle(yesterdayDate);
 
             if (percentage.HasValue)
-                taskTriangle.Configuration.PercentagesProgressToNotify.Add(percentage.Value);
+                taskTriangle.Configuration.PercentagesProgressToNotify.Set(percentage.Value);
 
             Assert.Equal(shouldNotify, taskTriangle.ShouldNotify());
         }
@@ -43,7 +43,7 @@ Me,
             Assert.True(taskTriangle.Content.MarkContentDone("Clean teeth with dental floss"));
 
             string actualStatus = taskTriangle.GetStatus();
-            string statusWithoutReportTime = actualStatus.Remove(0, 37);
+            string statusWithoutReportTime = actualStatus.Remove(0, 38);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);
         }
