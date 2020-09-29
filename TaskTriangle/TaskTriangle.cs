@@ -70,12 +70,18 @@ namespace Triangle
 
         public bool ShouldNotify()
         {
+            int currentTimeProgressPercentage = GetCurrentTimeProgressPercentage();
+            return Configuration.PercentagesProgressToNotify.HasLowerPercentage(currentTimeProgressPercentage);
+        }
+
+        public int GetCurrentTimeProgressPercentage()
+        {
             int totalHours = Time.ExpectedDuration.CalculateTotalHours(Time.TimeMode);
             TaskerTimeSpan remainingTime = Time.GetRemainingTime();
             float fraction = (float)remainingTime.CalculateTotalHours(Time.TimeMode) / totalHours;
             int currentTimeProgressPercentage = 100 - (int)(fraction * 100);
 
-            return Configuration.PercentagesProgressToNotify.HasLowerPercentage(currentTimeProgressPercentage);
+            return currentTimeProgressPercentage;
         }
     }
 }
