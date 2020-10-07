@@ -68,10 +68,16 @@ namespace Triangle
             return status;
         }
 
-        public bool ShouldNotify()
+        public bool ShouldAlreadyBeNotified()
         {
             int currentTimeProgressPercentage = GetCurrentTimeProgressPercentage();
             return Configuration.PercentagesProgressToNotify.HasLowerPercentage(currentTimeProgressPercentage);
+        }
+
+        public bool ShouldNotifyExact()
+        {
+            int currentTimeProgressPercentage = GetCurrentTimeProgressPercentage();
+            return Configuration.PercentagesProgressToNotify.HasClosePercentage(currentTimeProgressPercentage);
         }
 
         public int GetCurrentTimeProgressPercentage()

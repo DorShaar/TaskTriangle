@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Triangle.Configuration
 {
+    /// <summary>
+    /// Holds only percentages of multiplications of tens, between 0 to 100 (0, 10, 20, ..., 90, 100).
+    /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
     public class PercentagesList
     {
@@ -26,6 +29,12 @@ namespace Triangle.Configuration
         public bool HasLowerPercentage(int num)
         {
             return mPercentagesSet.Any(percentage => percentage <= num);
+        }
+
+        public bool HasClosePercentage(int num)
+        {
+            int roundedNumber = GetRoundedNumber(num);
+            return mPercentagesSet.Contains(roundedNumber);
         }
 
         private int GetRoundedNumber(int num)

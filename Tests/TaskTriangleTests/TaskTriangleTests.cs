@@ -10,7 +10,7 @@ namespace TaskTriangleTests
         [Theory]
         [InlineData(60, true)]
         [InlineData(null, false)]
-        public void ShouldNotify_AsExpected(int? percentage, bool shouldNotify)
+        public void ShouldAlreadyBeNotified_AsExpected(int? percentage, bool shouldNotify)
         {
             string yesterdayDate = DateTime.Now.Date.AddDays(-1).ToString(TimeConsts.TimeFormat);
 
@@ -19,7 +19,23 @@ namespace TaskTriangleTests
             if (percentage.HasValue)
                 taskTriangle.Configuration.PercentagesProgressToNotify.Set(percentage.Value);
 
-            Assert.Equal(shouldNotify, taskTriangle.ShouldNotify());
+            Assert.Equal(shouldNotify, taskTriangle.ShouldAlreadyBeNotified());
+        }
+
+        [Theory]
+        [InlineData(70, false)]
+        [InlineData(50, true)]
+        [InlineData(null, false)]
+        public void ShouldNotifyExact_AsExpected(int? percentage, bool shouldNotify)
+        {
+            string yesterdayDate = DateTime.Now.Date.ToString(TimeConsts.TimeFormat);
+
+            TaskTriangle taskTriangle = CreateTaskTriangle(yesterdayDate);
+
+            if (percentage.HasValue)
+                taskTriangle.Configuration.PercentagesProgressToNotify.Set(percentage.Value);
+
+            Assert.Equal(shouldNotify, taskTriangle.ShouldNotifyExact());
         }
 
         [Fact]
@@ -43,7 +59,7 @@ Me,
             Assert.True(taskTriangle.Content.MarkContentDone("Clean teeth with dental floss"));
 
             string actualStatus = taskTriangle.GetStatus();
-            string statusWithoutReportTime = actualStatus.Remove(0, 38);
+            string statusWithoutReportTime = actualStatus.Remove(0, 37);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);
         }
