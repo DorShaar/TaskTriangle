@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Triangle;
 using Triangle.JsonSerialization;
-using Triangle.Time;
 using Xunit;
 
 namespace TaskTriangleTests
@@ -12,7 +12,9 @@ namespace TaskTriangleTests
     public class JsonSerializationTests
     {
         private const string TestFilesDirectory = "TestFiles";
+
         private readonly JsonSerializerSettings mSerializerSettings = new JsonSerializerSettings();
+        private readonly string mSerializeTriangleFile = Path.Combine(TestFilesDirectory, "serialized_triangle.txt");
 
         public JsonSerializationTests()
         {
@@ -26,16 +28,14 @@ namespace TaskTriangleTests
             taskTriangleBuilder.AddContent("content 1")
                                .AddContent("content 2")
                                .AddResource("resource 1")
-                               .AddPercentageProgressToNotify(30)
-                               .AddPercentageProgressToNotify(95)
-                               .SetTime("29/09/2020", DayPeriod.Noon, 3, true);
+                               .SetTime(DateTime.Parse("29/09/2020"), TimeSpan.FromDays(0.5));
 
             TaskTriangle taskTriangle = taskTriangleBuilder.Build();
 
             string jsonText = JsonConvert.SerializeObject(
                 taskTriangle, Formatting.Indented, mSerializerSettings);
-            string expectedTextPath = Path.Combine(TestFilesDirectory, "serialized_triangle.txt");
-            string expectedText = await File.ReadAllTextAsync(expectedTextPath)
+
+            string expectedText = await File.ReadAllTextAsync(mSerializeTriangleFile)
                 .ConfigureAwait(false);
 
             Assert.Equal(expectedText, jsonText);
@@ -44,8 +44,7 @@ namespace TaskTriangleTests
         [Fact]
         public async Task Deserialize_AsExpected()
         {
-            string serializedTrianglePath = Path.Combine(TestFilesDirectory, "serialized_triangle.txt");
-            string serializedTriangleJson = await File.ReadAllTextAsync(serializedTrianglePath)
+            string serializedTriangleJson = await File.ReadAllTextAsync(mSerializeTriangleFile)
                 .ConfigureAwait(false);
 
             TaskTriangle taskTriangle = JsonConvert.DeserializeObject<TaskTriangle>(
@@ -57,16 +56,9 @@ namespace TaskTriangleTests
 
             Assert.Equal("resource 1", taskTriangle.Resources.GetResources().First());
 
-            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(30));
-            taskTriangle.Configuration.PercentagesProgressToNotify.Reset(30);
-
-            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(95));
-            Assert.False(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(89));
-
-            Assert.Equal(2020, taskTriangle.Time.StartTime.DateTime.Year);
-            Assert.Equal(9, taskTriangle.Time.StartTime.DateTime.Month);
-            Assert.Equal(29, taskTriangle.Time.StartTime.DateTime.Day);
-            Assert.Equal(DayPeriod.Noon, taskTriangle.Time.StartTime.DayPeriod);
+            Assert.Equal(2020, taskTriangle.Time.StartTime.Year);
+            Assert.Equal(9, taskTriangle.Time.StartTime.Month);
+            Assert.Equal(29, taskTriangle.Time.StartTime.Day);
         }
     }
 }

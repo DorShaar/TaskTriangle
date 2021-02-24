@@ -1,22 +1,8 @@
 {
-  "Configuration": {
-    "PercentagesProgressToNotify": {
-      "mPercentagesSet": [
-        30,
-        90
-      ]
-    }
-  },
+  "AlertBefore": "00:30:00",
   "Time": {
-    "TimeMode": 0,
-    "StartTime": {
-      "DateTime": "29/09/2020",
-      "DayPeriod": 1
-    },
-    "ExpectedDuration": {
-      "Days": 3,
-      "Hours": 12
-    }
+    "StartTime": "29/09/2020",
+    "ExpectedDuration": "12:00:00"
   },
   "Content": {
     "mContents": {

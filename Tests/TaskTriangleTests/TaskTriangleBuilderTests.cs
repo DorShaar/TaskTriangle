@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Triangle;
-using Triangle.Time;
 using Xunit;
 
 namespace TaskTriangleTests
@@ -13,17 +13,15 @@ namespace TaskTriangleTests
         {
             TaskTriangleBuilder builder = new TaskTriangleBuilder();
 
-            string content1 = "Clean teeth with dental floss";
-            string content2 = "Sleep at 10 PM";
-            string resource = "Me";
+            const string content1 = "Clean teeth with dental floss";
+            const string content2 = "Sleep at 10 PM";
+            const string resource = "Me";
 
             TaskTriangle taskTriangle = builder
                 .AddContent(content1)
                 .AddResource(resource)
-                .SetTime("23/09/2020", DayPeriod.Morning, 1, false)
+                .SetTime(DateTime.Parse("23/09/2020"), TimeSpan.FromHours(12))
                 .AddContent(content2)
-                .AddPercentageProgressToNotify(30)
-                .AddPercentageProgressToNotify(85)
                 .Build();
 
             IReadOnlyDictionary<string, bool> contents = taskTriangle.Content.GetContents();
@@ -33,15 +31,9 @@ namespace TaskTriangleTests
 
             Assert.Equal(resource, taskTriangle.Resources.GetResources().First());
 
-            Assert.Equal(23, taskTriangle.Time.StartTime.DateTime.Day);
-            Assert.Equal(09, taskTriangle.Time.StartTime.DateTime.Month);
-            Assert.Equal(2020, taskTriangle.Time.StartTime.DateTime.Year);
-
-
-            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(30));
-            taskTriangle.Configuration.PercentagesProgressToNotify.Reset(30);
-
-            Assert.True(taskTriangle.Configuration.PercentagesProgressToNotify.HasLowerPercentage(85));
+            Assert.Equal(23, taskTriangle.Time.StartTime.Day);
+            Assert.Equal(09, taskTriangle.Time.StartTime.Month);
+            Assert.Equal(2020, taskTriangle.Time.StartTime.Year);
         }
     }
 }

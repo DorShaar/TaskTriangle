@@ -8,34 +8,27 @@ namespace TaskTriangleTests
     public class TaskTriangleTests
     {
         [Theory]
-        [InlineData(60, true)]
-        [InlineData(null, false)]
-        public void ShouldAlreadyBeNotified_AsExpected(int? percentage, bool shouldNotify)
+        [InlineData(-1, true)]
+        [InlineData(1, false)]
+        public void ShouldNotify_AsExpected(int daysFromNow, bool shouldNotify)
         {
-            string yesterdayDate = DateTime.Now.Date.AddDays(-1).ToString(TimeConsts.TimeFormat);
+            string dayesFromNow = DateTime.Now.Date.AddDays(daysFromNow).ToString(TimeConsts.TimeFormat);
 
-            TaskTriangle taskTriangle = CreateTaskTriangle(yesterdayDate);
+            TaskTriangle taskTriangle = CreateTaskTriangle(dayesFromNow);
 
-            if (percentage.HasValue)
-                taskTriangle.Configuration.PercentagesProgressToNotify.Set(percentage.Value);
-
-            Assert.Equal(shouldNotify, taskTriangle.ShouldAlreadyBeNotified());
+            Assert.Equal(shouldNotify, taskTriangle.ShouldNotify());
         }
 
-        [Theory]
-        [InlineData(70, false)]
-        [InlineData(50, true)]
-        [InlineData(null, false)]
-        public void ShouldNotifyExact_AsExpected(int? percentage, bool shouldNotify)
+        private TaskTriangle CreateTaskTriangle(string startDate)
         {
-            string yesterdayDate = DateTime.Now.Date.ToString(TimeConsts.TimeFormat);
+            TaskTriangleBuilder builder = new TaskTriangleBuilder();
 
-            TaskTriangle taskTriangle = CreateTaskTriangle(yesterdayDate);
-
-            if (percentage.HasValue)
-                taskTriangle.Configuration.PercentagesProgressToNotify.Set(percentage.Value);
-
-            Assert.Equal(shouldNotify, taskTriangle.ShouldNotifyExact());
+            return builder
+                .AddContent("Clean teeth with dental floss")
+                .AddResource("Me")
+                .SetTime(DateTime.Parse(startDate), TimeSpan.FromHours(5))
+                .AddContent("Sleep at 10 PM")
+                .Build();
         }
 
         [Fact]
@@ -43,10 +36,10 @@ namespace TaskTriangleTests
         {
             TaskTriangle taskTriangle = CreateTaskTriangle("25/09/2020");
 
-            string expectedStatus = 
-@"Start Time: 25/09/2020 Morning.
+            const string expectedStatus =
+@"Start Time: 25/09/2020.
 Expected duration given: 1 days and 0 hours. (Total hours: 24).
-Due date: 26/09/2020 Morning.
+Due date: 26/09/2020.
 
 Contents:
 Clean teeth with dental floss - Done.
@@ -59,23 +52,9 @@ Me,
             Assert.True(taskTriangle.Content.MarkContentDone("Clean teeth with dental floss"));
 
             string actualStatus = taskTriangle.GetStatus();
-            string statusWithoutReportTime = actualStatus.Remove(0, 37);
+            string statusWithoutReportTime = actualStatus.Remove(0, 36);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);
-        }
-
-        private TaskTriangle CreateTaskTriangle(string startDate)
-        {
-            TaskTriangleBuilder builder = new TaskTriangleBuilder();
-
-            TaskTriangle taskTriangle = builder
-                .AddContent("Clean teeth with dental floss")
-                .AddResource("Me")
-                .SetTime(startDate, DayPeriod.Morning, workDays: 1, halfWorkDay: false)
-                .AddContent("Sleep at 10 PM")
-                .Build();
-
-            return taskTriangle;
         }
     }
 }
