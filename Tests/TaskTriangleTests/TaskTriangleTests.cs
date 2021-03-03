@@ -19,18 +19,6 @@ namespace TaskTriangleTests
             Assert.Equal(shouldNotify, taskTriangle.ShouldNotify());
         }
 
-        private TaskTriangle CreateTaskTriangle(string startDate)
-        {
-            TaskTriangleBuilder builder = new TaskTriangleBuilder();
-
-            return builder
-                .AddContent("Clean teeth with dental floss")
-                .AddResource("Me")
-                .SetTime(DateTime.Parse(startDate), TimeSpan.FromHours(5))
-                .AddContent("Sleep at 10 PM")
-                .Build();
-        }
-
         [Fact]
         public void GetStatus_AsExpected()
         {
@@ -55,6 +43,18 @@ Me,
             string statusWithoutReportTime = actualStatus.Remove(0, 36);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);
+        }
+
+        private TaskTriangle CreateTaskTriangle(string startDate)
+        {
+            TaskTriangleBuilder builder = new TaskTriangleBuilder();
+
+            return builder
+                .AddContent("Clean teeth with dental floss")
+                .AddResource("Me")
+                .SetTime(DateTime.Parse(startDate), TimeSpan.FromHours(5))
+                .AddContent("Sleep at 10 PM")
+                .Build();
         }
     }
 }
