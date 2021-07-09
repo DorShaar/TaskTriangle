@@ -10,10 +10,10 @@ namespace Triangle
 {
     public class TaskTriangle
     {
-        private readonly StringBuilder mStringBuilder = new StringBuilder();
-        private Stack<int> mAlertDuringPercentages { get; } = new Stack<int>(4);
-
-        public TimeSpan AlertBefore { get; set; } = TimeSpan.FromMinutes(30);
+        /// <summary>
+        /// Default is 30 minutes.
+        /// </summary>
+        public List<TimeSpan> AlertsBefore { get; set; } = new List<TimeSpan> { TimeSpan.FromMinutes(30) };
 
         public TaskTime Time { get; }
         public TaskContent Content { get; }
@@ -25,23 +25,15 @@ namespace Triangle
             Time = time;
             Resources = resources;
             Content = content;
-
-            InitializeAlertDuringPercentages();
         }
 
-        private void InitializeAlertDuringPercentages()
-        {
-            mAlertDuringPercentages.Push(90);
-            mAlertDuringPercentages.Push(80);
-            mAlertDuringPercentages.Push(70);
-            mAlertDuringPercentages.Push(50);
-        }
-
-        public string GetStatus()
+        public string GetStringStatus()
         {
             DateTime expectedDueDate = Time.GetExpectedDueDate();
 
-            mStringBuilder
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder
                 .Append("Report time: ").Append(DateTime.Now)
                 .AppendLine(Environment.NewLine)
                 .Append("Start Time: ").Append(Time.StartTime.ToString(TimeConsts.TimeFormat)).AppendLine(".")
@@ -49,67 +41,38 @@ namespace Triangle
                 .Append(Time.ExpectedDuration.Hours).Append(" hours. (Total hours: ")
                 .Append(Time.ExpectedDuration.TotalHours).AppendLine(").")
                 .Append("Due date: ").Append(expectedDueDate.ToString(TimeConsts.TimeFormat)).Append(".")
-                .AppendLine(Environment.NewLine)
-                .AppendLine("Contents:");
+                .AppendLine(Environment.NewLine);
 
-            foreach (var content in Content.GetContents())
-            {
-                mStringBuilder.Append(content.Key).Append(" - ").AppendLine(content.Value ? "Done." : "Open.");
-            }
+            AppendContentsToStringBuilder(stringBuilder);
+            AppendResourcesToStringBuilder(stringBuilder);
 
-            mStringBuilder.AppendLine()
-                .AppendLine("Resources:");
+            stringBuilder.AppendLine();
 
-            foreach (string resource in Resources.GetResources())
-            {
-                mStringBuilder.Append(resource).Append(", ");
-            }
-
-            mStringBuilder.AppendLine();
-
-            string status = mStringBuilder.ToString();
-            mStringBuilder.Clear();
+            string status = stringBuilder.ToString();
+            stringBuilder.Clear();
 
             return status;
         }
 
-        public bool ShouldNotify()
+        private void AppendContentsToStringBuilder(StringBuilder stringBuilder)
         {
-            int currentTimeProgressPercentage = GetCurrentTimeProgressPercentage();
+            stringBuilder.AppendLine("Contents:");
 
-            int alertPercentage = mAlertDuringPercentages.Peek();
-
-            bool shouldNotify = false;
-
-            while (mAlertDuringPercentages.Count > 0 && alertPercentage < currentTimeProgressPercentage)
+            foreach (var content in Content.GetContents())
             {
-                shouldNotify = true;
-
-                mAlertDuringPercentages.Pop();
-
-                if (mAlertDuringPercentages.Count > 0)
-                    alertPercentage = mAlertDuringPercentages.Peek();
+                stringBuilder.Append(content.Key).Append(" - ").AppendLine(content.Value ? "Done." : "Open.");
             }
-
-            return shouldNotify;
         }
 
-        public int GetCurrentTimeProgressPercentage()
+        private void AppendResourcesToStringBuilder(StringBuilder stringBuilder)
         {
-            double totalHours = Time.ExpectedDuration.TotalHours;
+            stringBuilder.AppendLine()
+               .AppendLine("Resources:");
 
-            TimeSpan timeLeft = Time.GetExpectedDueDate() - DateTime.Now;
-
-            double fraction = timeLeft.TotalHours / totalHours;
-
-            int currentTimeProgressPercentage;
-
-            if (fraction > 1)
-                currentTimeProgressPercentage = 0;
-            else
-                currentTimeProgressPercentage = 100 - (int)(fraction * 100);
-
-            return currentTimeProgressPercentage;
+            foreach (string resource in Resources.GetResources())
+            {
+                stringBuilder.Append(resource).Append(", ");
+            }
         }
     }
 }

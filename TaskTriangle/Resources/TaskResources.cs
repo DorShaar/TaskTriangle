@@ -18,5 +18,10 @@ namespace Triangle.Resources
         {
             mResources.Add(resource);
         }
+
+        public bool RemoveResource(string resource)
+        {
+            return mResources.Remove(resource);
+        }
     }
 }

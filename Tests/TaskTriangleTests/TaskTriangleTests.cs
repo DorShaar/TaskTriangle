@@ -1,24 +1,11 @@
 ﻿using System;
 using Triangle;
-using Triangle.Time;
 using Xunit;
 
 namespace TaskTriangleTests
 {
     public class TaskTriangleTests
     {
-        [Theory]
-        [InlineData(-1, true)]
-        [InlineData(1, false)]
-        public void ShouldNotify_AsExpected(int daysFromNow, bool shouldNotify)
-        {
-            string dayesFromNow = DateTime.Now.Date.AddDays(daysFromNow).ToString(TimeConsts.TimeFormat);
-
-            TaskTriangle taskTriangle = CreateTaskTriangle(dayesFromNow);
-
-            Assert.Equal(shouldNotify, taskTriangle.ShouldNotify());
-        }
-
         [Fact(Skip = "Results changes according to time")]
         public void GetStatus_AsExpected()
         {
@@ -39,7 +26,7 @@ Me,
 
             Assert.True(taskTriangle.Content.MarkContentDone("Clean teeth with dental floss"));
 
-            string actualStatus = taskTriangle.GetStatus();
+            string actualStatus = taskTriangle.GetStringStatus();
             string statusWithoutReportTime = actualStatus.Remove(0, 36);
 
             Assert.Equal(expectedStatus, statusWithoutReportTime);

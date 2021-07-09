@@ -4,8 +4,8 @@ namespace Triangle.Time
 {
     public class TaskTime
     {
-        public DateTime StartTime { get; }
-        public TimeSpan ExpectedDuration { get; }
+        public DateTime StartTime { get; set; }
+        public TimeSpan ExpectedDuration { get; set; }
 
         public TaskTime(DateTime startTime, TimeSpan expectedDuration)
         {
