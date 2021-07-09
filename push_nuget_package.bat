@@ -1,14 +1,12 @@
 @ECHO OFF
 
 echo Testing TaskTriangle
-dotnet test Tests/TaskTriangleTests/TaskTriangleTests.csproj
+dotnet test Tests/TaskTriangleTests/TaskTriangleTests.csproj --no-build
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-echo Packing TaskTriangle
-set /p packageVersion="Enter package version: "
-dotnet pack -p:PackageVersion=%packageVersion%
+echo Pack TaskTriangle
 
 echo Pushing package to github
 set /p packageVersion="Enter package version: "
-echo Pusihg bin/debug/TaskTriangle.%packageVersion%.nupkg
+echo Pushing bin/debug/TaskTriangle.%packageVersion%.nupkg
 dotnet nuget push TaskTriangle\bin\Debug\TaskTriangle.%packageVersion%.nupkg --source "github"

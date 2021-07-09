@@ -6,6 +6,7 @@
     <RootNamespace>Triangle</RootNamespace>
     <Authors>DorShaar</Authors>
     <Company>DorShaar</Company>
+    <Version>2.0.2</Version>
     <RepositoryUrl>https://github.com/DorShaar/tasktriangle</RepositoryUrl>
   </PropertyGroup>
 

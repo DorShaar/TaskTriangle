@@ -1,5 +1,7 @@
 {
-  "AlertBefore": "00:30:00",
+  "AlertsBefore": [
+    "00:30:00"
+  ],
   "Time": {
     "StartTime": "29/09/2020",
     "ExpectedDuration": "12:00:00"
